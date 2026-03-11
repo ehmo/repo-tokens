@@ -9,7 +9,7 @@ import (
 
 // UpdateMarkers replaces content between <!-- marker --> and <!-- /marker -->.
 // Returns true if the file was modified.
-func UpdateMarkers(path, marker, text, linkURL string) (bool, error) {
+func UpdateMarkers(path, marker, text, linkURL, badgeImgPath string) (bool, error) {
 	data, err := os.ReadFile(path)
 	if err != nil {
 		return false, err
@@ -22,8 +22,13 @@ func UpdateMarkers(path, marker, text, linkURL string) (bool, error) {
 		return false, err
 	}
 
-	linked := fmt.Sprintf(`<a href="%s">%s</a>`, linkURL, text)
-	updated := re.ReplaceAllString(content, "${1}"+linked+"${2}")
+	var replacement string
+	if badgeImgPath != "" {
+		replacement = fmt.Sprintf(`<a href="%s"><img src="%s" alt="%s"></a>`, linkURL, badgeImgPath, text)
+	} else {
+		replacement = fmt.Sprintf(`<a href="%s">%s</a>`, linkURL, text)
+	}
+	updated := re.ReplaceAllString(content, "${1}"+replacement+"${2}")
 	if updated == content {
 		return false, nil
 	}

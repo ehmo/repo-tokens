@@ -122,7 +122,7 @@ func main() {
 			url = "https://github.com/ehmo/repo-tokens"
 		}
 		text := badge.Text(s.TotalTokens, s.ContextWindow)
-		if ok, err := readme.UpdateMarkers(updReadme, marker, text, url); err != nil {
+		if ok, err := readme.UpdateMarkers(updReadme, marker, text, url, badgePath); err != nil {
 			fmt.Fprintf(os.Stderr, "warning: readme: %v\n", err)
 		} else if ok {
 			fmt.Printf("\nREADME updated: %s\n", updReadme)
