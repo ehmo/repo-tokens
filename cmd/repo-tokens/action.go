@@ -55,7 +55,13 @@ func runAction() {
 			if url == "" {
 				url = "https://github.com/ehmo/repo-tokens"
 			}
-			if ok, err := readme.UpdateMarkers(readmePath, marker, text, url); err != nil {
+			var content string
+			if badgePath != "" {
+				content = fmt.Sprintf("[![%s](%s)](%s)", text, badgePath, url)
+			} else {
+				content = fmt.Sprintf(`<a href="%s">%s</a>`, url, text)
+			}
+			if ok, err := readme.UpdateMarkers(readmePath, marker, content); err != nil {
 				fmt.Fprintf(os.Stderr, "warning: readme: %v\n", err)
 			} else if ok {
 				fmt.Println("README updated")
