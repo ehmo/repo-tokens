@@ -112,8 +112,8 @@ func main() {
 		if err := badge.Write(badgePath, s.TotalTokens, s.ContextWindow, repoURL); err != nil {
 			fatal("badge: %v", err)
 		}
-		fmt.Printf("\nBadge written to %s (%s, %d%%)\n",
-			badgePath, badge.FormatTokens(s.TotalTokens), badge.Percentage(s.TotalTokens, s.ContextWindow))
+		fmt.Printf("\nBadge written to %s (%s, %s%%)\n",
+			badgePath, badge.FormatTokens(s.TotalTokens), badge.FormatNumber(badge.Percentage(s.TotalTokens, s.ContextWindow)))
 	}
 
 	if updReadme != "" {

@@ -51,23 +51,23 @@ func printTable(s ScanResult, root string) {
 		r := s.Results[0]
 		pct := badge.Percentage(r.Tokens, s.ContextWindow)
 		fmt.Printf("  %s (%s)\n", r.Project.Name, r.Project.Preset.Name)
-		fmt.Printf("  %d files · %s tokens · %d%% of context\n", r.Files, badge.FormatTokens(r.Tokens), pct)
+		fmt.Printf("  %s files · %s tokens · %s%% of context\n", badge.FormatNumber(r.Files), badge.FormatTokens(r.Tokens), badge.FormatNumber(pct))
 		if r.SkippedBin > 0 {
 			fmt.Printf("  (%d binary files skipped)\n", r.SkippedBin)
 		}
 	} else {
-		fmt.Printf("  %-20s %8s %8s %8s   %s\n", "PROJECT", "TYPE", "FILES", "TOKENS", "CTX")
-		fmt.Printf("  %s\n", strings.Repeat("─", 62))
+		fmt.Printf("  %-20s %10s %10s %12s   %s\n", "PROJECT", "TYPE", "FILES", "TOKENS", "CTX")
+		fmt.Printf("  %s\n", strings.Repeat("─", 70))
 
 		for _, r := range s.Results {
 			pct := badge.Percentage(r.Tokens, s.ContextWindow)
-			fmt.Printf("  %-20s %8s %8d %8s %5d%%  %s\n",
-				r.Project.Path, r.Project.Preset.Name, r.Files, badge.FormatTokens(r.Tokens), pct, bar(pct))
+			fmt.Printf("  %-20s %10s %10s %12s %5s%%  %s\n",
+				r.Project.Path, r.Project.Preset.Name, badge.FormatNumber(r.Files), badge.FormatTokens(r.Tokens), badge.FormatNumber(pct), bar(pct))
 		}
 
-		fmt.Printf("  %s\n", strings.Repeat("─", 62))
+		fmt.Printf("  %s\n", strings.Repeat("─", 70))
 		pct := badge.Percentage(s.TotalTokens, s.ContextWindow)
-		fmt.Printf("  %-20s          %8d %8s %5d%%\n", "Total", s.TotalFiles, badge.FormatTokens(s.TotalTokens), pct)
+		fmt.Printf("  %-20s            %10s %12s %5s%%\n", "Total", badge.FormatNumber(s.TotalFiles), badge.FormatTokens(s.TotalTokens), badge.FormatNumber(pct))
 	}
 	fmt.Println()
 }

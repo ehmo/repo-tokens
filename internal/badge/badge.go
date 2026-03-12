@@ -15,6 +15,29 @@ func Percentage(tokens, contextWindow int) int {
 	return int(math.Round(float64(tokens) / float64(contextWindow) * 100))
 }
 
+// FormatNumber returns an integer formatted with comma separators.
+func FormatNumber(n int) string {
+	if n < 0 {
+		return "-" + FormatNumber(-n)
+	}
+	s := fmt.Sprintf("%d", n)
+	if len(s) <= 3 {
+		return s
+	}
+	var buf strings.Builder
+	r := len(s) % 3
+	if r > 0 {
+		buf.WriteString(s[:r])
+	}
+	for i := r; i < len(s); i += 3 {
+		if buf.Len() > 0 {
+			buf.WriteByte(',')
+		}
+		buf.WriteString(s[i : i+3])
+	}
+	return buf.String()
+}
+
 // FormatTokens returns a human-friendly token count string.
 func FormatTokens(n int) string {
 	switch {
@@ -31,8 +54,8 @@ func FormatTokens(n int) string {
 
 // Text returns formatted badge text like "12.3k tokens · 6% of context window".
 func Text(tokens, contextWindow int) string {
-	return fmt.Sprintf("%s tokens · %d%% of context window",
-		FormatTokens(tokens), Percentage(tokens, contextWindow))
+	return fmt.Sprintf("%s tokens · %s%% of context window",
+		FormatTokens(tokens), FormatNumber(Percentage(tokens, contextWindow)))
 }
 
 // Color returns a hex color based on context window fill percentage.
@@ -53,9 +76,9 @@ func Color(pct int) string {
 func SVG(tokens, contextWindow int, repoURL string) string {
 	formatted := FormatTokens(tokens)
 	pct := Percentage(tokens, contextWindow)
-	display := fmt.Sprintf("%s · %d%%", formatted, pct)
+	display := fmt.Sprintf("%s · %s%%", formatted, FormatNumber(pct))
 	color := Color(pct)
-	desc := fmt.Sprintf("%s tokens, %d%% of context window", formatted, pct)
+	desc := fmt.Sprintf("%s tokens, %s%% of context window", formatted, FormatNumber(pct))
 	url := repoURL
 	if url == "" {
 		url = defaultLinkURL

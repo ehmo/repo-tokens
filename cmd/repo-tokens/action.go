@@ -33,11 +33,11 @@ func runAction() {
 	})
 
 	text := badge.Text(s.TotalTokens, s.ContextWindow)
-	fmt.Printf("Files: %d, Tokens: %d, Badge: %s\n", s.TotalFiles, s.TotalTokens, text)
+	fmt.Printf("Files: %s, Tokens: %s, Badge: %s\n", badge.FormatNumber(s.TotalFiles), badge.FormatNumber(s.TotalTokens), text)
 	for _, r := range s.Results {
-		fmt.Printf("  %s (%s): %d files, %s tokens, %d%%\n",
-			r.Project.Path, r.Project.Preset.Name, r.Files,
-			badge.FormatTokens(r.Tokens), badge.Percentage(r.Tokens, s.ContextWindow))
+		fmt.Printf("  %s (%s): %s files, %s tokens, %s%%\n",
+			r.Project.Path, r.Project.Preset.Name, badge.FormatNumber(r.Files),
+			badge.FormatTokens(r.Tokens), badge.FormatNumber(badge.Percentage(r.Tokens, s.ContextWindow)))
 	}
 
 	if badgePath != "" {
